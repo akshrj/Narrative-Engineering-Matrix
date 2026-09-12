@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Narrative Engineering Matrix: Master Curriculum & Execution Roadmap</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#2563eb',
+              600: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+            stage1: '#4f46e5', // Indigo
+            stage2: '#d97706', // Amber
+            stage3: '#059669', // Emerald
+            stage4: '#7c3aed', // Purple
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .chart-container {
+      position: relative;
+      width: 100%;
+      max-width: 550px;
+      margin-left: auto;
+      margin-right: auto;
+      height: 280px;
+      max-height: 320px;
+    }
+    @media (min-width: 768px) {
+      .chart-container {
+        height: 320px;
+      }
+    }
+  </style>
+</head>
+<body class="h-full font-sans text-slate-800 bg-slate-50 antialiased selection:bg-indigo-100 selection:text-indigo-900">
+
+<!-- Chosen Palette: Warm Intellectual Neutrals (Stone/Slate background with Indigo, Amber, Emerald, and Violet Stage Accents) -->
+<!-- Application Structure Plan: Designed as a 4-Stage sequential master curriculum dashboard with interactive search/filtering, detailed modal drawers for each text, visual analytics using Chart.js, and browser-persisted progress tracking. This architecture was chosen because mastering a 31-resource narrative engineering system requires clear stage progression, quick diagnostic lookups, and tracking capability without cognitive overload. -->
+<!-- Visualization & Content Choices: 31 books/frameworks -> Structured 4-Stage Roadmap -> Chart.js Bar & Donut Charts for stage distribution & system synergy -> Dynamic JS filtering & modals -> Justification: Ensures absolute clarity over the reading order and practical application of each text -> Library: Chart.js (Canvas based, no SVG), Tailwind CSS. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<div class="min-h-full flex flex-col">
+
+  <!-- TOP HEADER -->
+  <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded text-xs font-bold tracking-wide uppercase bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Master Syllabus</span>
+            <span class="text-xs text-slate-400">Version 3.0 • Hermetically Sealed</span>
+          </div>
+          <h1 class="text-2xl font-extrabold tracking-tight mt-1 text-white">Narrative Engineering Matrix</h1>
+          <p class="text-xs text-slate-400 mt-0.5">Sequential Master Reading & Mastery Roadmap for Honkaku, Hard Supernatural, and Elite Literary Fusion</p>
+        </div>
+
+        <!-- System Progress Bar -->
+        <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 min-w-[280px]">
+          <div class="flex justify-between items-center text-xs mb-1.5">
+            <span class="text-slate-300 font-medium">System Mastery Progress</span>
+            <span id="progress-percent" class="text-indigo-400 font-bold">0% Completed</span>
+          </div>
+          <div class="w-full bg-slate-700 h-2.5 rounded-full overflow-hidden">
+            <div id="progress-bar-fill" class="bg-indigo-500 h-full w-0 transition-all duration-500"></div>
+          </div>
+          <div class="flex justify-between items-center text-[10px] text-slate-400 mt-1">
+            <span id="progress-count">0 of 31 Texts Mastered</span>
+            <button onclick="resetProgress()" class="hover:text-red-400 underline">Reset Progress</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN NAVIGATION TABS -->
+  <nav class="bg-white border-b border-slate-200 shadow-sm sticky top-[73px] z-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex space-x-1 sm:space-x-4 overflow-x-auto py-2 scrollbar-none" id="tab-navigation">
+        <button onclick="switchTab('stage1')" id="tab-stage1" class="tab-btn active border-b-2 border-indigo-600 text-indigo-600 px-3 py-2 text-xs sm:text-sm font-semibold whitespace-nowrap">
+          Stage 1: Base & Syntax (12)
+        </button>
+        <button onclick="switchTab('stage2')" id="tab-stage2" class="tab-btn border-b-2 border-transparent text-slate-600 hover:text-slate-900 px-3 py-2 text-xs sm:text-sm font-semibold whitespace-nowrap">
+          Stage 2: Puzzle & Time (9)
+        </button>
+        <button onclick="switchTab('stage3')" id="tab-stage3" class="tab-btn border-b-2 border-transparent text-slate-600 hover:text-slate-900 px-3 py-2 text-xs sm:text-sm font-semibold whitespace-nowrap">
+          Stage 3: Behavioral Matrix (5)
+        </button>
+        <button onclick="switchTab('stage4')" id="tab-stage4" class="tab-btn border-b-2 border-transparent text-slate-600 hover:text-slate-900 px-3 py-2 text-xs sm:text-sm font-semibold whitespace-nowrap">
+          Stage 4: Elite Literary (5)
+        </button>
+        <button onclick="switchTab('all')" id="tab-all" class="tab-btn border-b-2 border-transparent text-slate-600 hover:text-slate-900 px-3 py-2 text-xs sm:text-sm font-semibold whitespace-nowrap">
+          Full Master Matrix (31)
+        </button>
+        <button onclick="switchTab('analytics')" id="tab-analytics" class="tab-btn border-b-2 border-transparent text-slate-600 hover:text-slate-900 px-3 py-2 text-xs sm:text-sm font-semibold whitespace-nowrap">
+          System Analytics
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BODY CONTENT AREA -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- SEARCH & FILTER CONTROLS BAR -->
+    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
+      <!-- Search Input -->
+      <div class="w-full md:w-96 relative">
+        <input type="text" id="search-input" onkeyup="filterBooks()" placeholder="Search books, authors, concepts (e.g. 'focalization', 'FACS', 'alibi')..." class="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white">
+        <span class="absolute left-3 top-2.5 text-slate-400 text-xs">🔍</span>
+      </div>
+
+      <!-- Filters -->
+      <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+        <select id="category-filter" onchange="filterBooks()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option value="all">All Categories</option>
+          <option value="Grammar & Syntax">Grammar & Syntax</option>
+          <option value="Pacing & Throttle">Pacing & Throttle</option>
+          <option value="Puzzle Plot & Fair-Play">Puzzle Plot & Fair-Play</option>
+          <option value="Temporal Physics & Focalization">Temporal Physics & Focalization</option>
+          <option value="Supernatural Physics">Supernatural Physics</option>
+          <option value="Behavioral Profiling">Behavioral Profiling</option>
+          <option value="Subtext & Aesthetics">Subtext & Aesthetics</option>
+          <option value="Literary Architecture">Literary Architecture</option>
+        </select>
+
+        <select id="status-filter" onchange="filterBooks()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option value="all">All Statuses</option>
+          <option value="completed">Completed Only</option>
+          <option value="pending">Pending Only</option>
+        </select>
+
+        <button onclick="clearFilters()" class="text-xs text-slate-500 hover:text-slate-800 px-2 py-1 underline">Clear</button>
+      </div>
+    </div>
+
+    <!-- STAGE HEADER BANNER (DYNAMIC) -->
+    <div id="stage-banner" class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-xl p-5 mb-6 border border-slate-800 shadow-sm">
+      <div class="flex items-center gap-3 mb-2">
+        <span id="stage-badge" class="px-2.5 py-1 rounded-md text-xs font-bold bg-indigo-500 text-white uppercase tracking-wider">Stage 1</span>
+        <h2 id="stage-title" class="text-xl font-bold">The Base Mechanics & Phrasal Engineering</h2>
+      </div>
+      <p id="stage-description" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+        The primary objective of Stage 1 is to bridge L2 spoken English intuition into transparent, native-level written prose. It establishes rigid grammatical rules, eliminates conversational clausal complexity in favor of phrasal nominalization, and builds a precise pacing throttle.
+      </p>
+    </div>
+
+    <!-- BOOK CARDS CONTAINER -->
+    <div id="books-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Dynamically Rendered by JS -->
+    </div>
+
+    <!-- SYSTEM ANALYTICS VIEW (HIDDEN BY DEFAULT) -->
+    <div id="analytics-view" class="hidden space-y-6">
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <h2 class="text-lg font-bold text-slate-900 mb-1">Systemic Architecture Breakdown</h2>
+        <p class="text-xs text-slate-500 mb-6">Quantitative distribution of syllabus resources across the 4 foundational pillars of narrative engineering.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div>
+            <div class="chart-container">
+              <canvas id="pillarChart"></canvas>
+            </div>
+          </div>
+          <div>
+            <div class="chart-container">
+              <canvas id="synergyChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Operational Guidance Summary -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-indigo-50 border border-indigo-200 p-5 rounded-xl">
+          <h3 class="font-bold text-indigo-950 text-sm mb-2">Phase 1: The Pane of Glass</h3>
+          <p class="text-xs text-indigo-900/80 leading-relaxed">
+            Books 1–12 engineer a transparent, hyper-efficient delivery system. The prose never draws attention to itself, allowing the reader to focus entirely on the puzzle without analytical interference.
+          </p>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 p-5 rounded-xl">
+          <h3 class="font-bold text-amber-950 text-sm mb-2">Phase 2: The Timeline Mechanics</h3>
+          <p class="text-xs text-amber-900/80 leading-relaxed">
+            Books 13–21 implement Genette's time physics and Bal's focalization optics. You map Layer 1 (Ghost Timeline) and present Layer 2 (Police Illusion) while hiding Layer 3 anchor points in plain sight.
+          </p>
+        </div>
+        <div class="bg-purple-50 border border-purple-200 p-5 rounded-xl">
+          <h3 class="font-bold text-purple-950 text-sm mb-2">Phase 3: The Literary Fusion</h3>
+          <p class="text-xs text-purple-900/80 leading-relaxed">
+            Books 22–31 bolt the elite literary engine onto the airtight procedural structure. You deploy FACS micro-betrayals, free indirect style, and subtextual dialogue to achieve Dostoevskian weight.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- BOOK DETAIL MODAL / DRAWER -->
+  <div id="book-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-slate-200 shadow-2xl p-6 relative">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 font-bold text-lg w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100">✕</button>
+
+      <div class="flex items-center gap-2 mb-3">
+        <span id="modal-stage-badge" class="px-2.5 py-0.5 rounded text-xs font-bold uppercase tracking-wide">Stage</span>
+        <span id="modal-order" class="text-xs font-mono font-semibold text-slate-500">Step #0</span>
+      </div>
+
+      <h2 id="modal-title" class="text-2xl font-extrabold text-slate-900 mb-1">Book Title</h2>
+      <p id="modal-author" class="text-sm font-medium text-indigo-600 mb-4">Author Name</p>
+
+      <div class="space-y-4 text-xs sm:text-sm text-slate-700">
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <h4 class="font-bold text-slate-900 uppercase text-[11px] tracking-wider mb-1 text-indigo-600">What It Teaches (Core Mechanics)</h4>
+          <p id="modal-teaches" class="leading-relaxed">Core mechanical lessons...</p>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <h4 class="font-bold text-slate-900 uppercase text-[11px] tracking-wider mb-1 text-indigo-600">Why You Need It In The Matrix (Systemic Purpose)</h4>
+          <p id="modal-purpose" class="leading-relaxed">Systemic rationale...</p>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <h4 class="font-bold text-slate-900 uppercase text-[11px] tracking-wider mb-1 text-indigo-600">Practical Application Blueprint</h4>
+          <p id="modal-application" class="leading-relaxed">Application guidance...</p>
+        </div>
+
+        <div class="flex justify-between items-center pt-2">
+          <span id="modal-category" class="text-xs bg-slate-200 text-slate-800 px-3 py-1 rounded-full font-medium">Category</span>
+          <button id="modal-toggle-btn" onclick="" class="px-4 py-2 rounded-lg text-xs font-bold text-white transition-colors">Toggle Mastery Status</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-4 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+      Narrative Engineering Matrix • Fully Integrated Master Curriculum • 31 Core Books & Frameworks Mapped
+    </div>
+  </footer>
+
+</div>
+
+<!-- JAVASCRIPT LOGIC -->
+<script>
+  // COMPLETE MASTER BOOKS DATASET (31 ITEMS IN EXACT SEQUENCED ORDER)
+  const masterBooks = [
+    // STAGE 1: BASE MECHANICS & SYNTAX (12 BOOKS)
+    {
+      id: 1,
+      stage: 1,
+      order: 1,
+      title: "English Grammar in Use (Intermediate)",
+      author: "Raymond Murphy",
+      category: "Grammar & Syntax",
+      teaches: "Foundational English grammar rules, rigid syntactic terminology, tense stability, and modal verb usage across structured units.",
+      purpose: "Eradicates basic structural gaps and establishes the initial clean coding baseline for prose construction.",
+      application: "Drill unit-by-unit to diagnose passive language acquisition flaws and master tense transitions.",
+      status: false
+    },
+    {
+      id: 2,
+      stage: 1,
+      order: 2,
+      title: "The Elements of Style",
+      author: "William Strunk Jr. & E.B. White",
+      category: "Grammar & Syntax",
+      teaches: "Stripping redundant qualifiers, active voice dominance, cutting bloat, and constructing punchy, aggressive sentences.",
+      purpose: "Acts as the Efficiency Filter. Forces sentences to be lean before introducing complex C1/C2 advanced structures.",
+      application: "Read immediately after Murphy's intermediate grammar to strip wordiness from draft prose.",
+      status: false
+    },
+    {
+      id: 3,
+      stage: 1,
+      order: 3,
+      title: "Advanced Grammar in Use",
+      author: "Martin Hewings",
+      category: "Grammar & Syntax",
+      teaches: "C1/C2 advanced English structures, complex inversion, conditional nuances, and sophisticated relative clause placement.",
+      purpose: "Provides edge-case grammatical mechanics without devolving into academic jargon or clumsy phrasing.",
+      application: "Deploy advanced structures strictly for mechanical impact during high-stakes narrative beats.",
+      status: false
+    },
+    {
+      id: 4,
+      stage: 1,
+      order: 4,
+      title: "Line by Line: How to Edit Your Own Writing",
+      author: "Claire Kehrwald Cook",
+      category: "Grammar & Syntax",
+      teaches: "Microscopic sentence troubleshooting, repairing dangling participles, fixing faulty parallelism, and untangling loose syntax.",
+      purpose: "Serves as the Quality Control Scalpel. Teaches how to independently diagnose and fix broken mechanics in drafts.",
+      application: "Use during the second-pass editing phase to purge clunky sentences and broken timelines.",
+      status: false
+    },
+    {
+      id: 5,
+      stage: 1,
+      order: 5,
+      title: "The Art of Styling Sentences",
+      author: "Ann Longknife & K.D. Sullivan",
+      category: "Pacing & Throttle",
+      teaches: "20 exact, numbered syntactic sentence patterns (e.g., series without conjunctions, dependent clause stacks).",
+      purpose: "Functions as a schematic menu for varying sentence rhythm, avoiding monotonous pacing during procedural action.",
+      application: "Consult when pacing feels repetitive. Select specific patterns to accelerate or decelerate narrative speed.",
+      status: false
+    },
+    {
+      id: 6,
+      stage: 1,
+      order: 6,
+      title: "A Dash of Style: The Art and Mastery of Punctuation",
+      author: "Noah Lukeman",
+      category: "Pacing & Throttle",
+      teaches: "Punctuation as physical velocity (periods = hard brakes, em-dashes = sudden swerves, colons = spotlights).",
+      purpose: "Provides a precise pacing throttle to manipulate reader heart rates during action sequences and interrogations.",
+      application: "Calibrate punctuation density to control tension during suspenseful moments.",
+      status: false
+    },
+    {
+      id: 7,
+      stage: 1,
+      order: 7,
+      title: "Merriam-Webster's Dictionary of Synonyms",
+      author: "Merriam-Webster Editorial",
+      category: "Grammar & Syntax",
+      teaches: "Microscopic legal, logical, and tonal distinctions between near-synonyms (e.g., deduce vs. infer; murder vs. execute).",
+      purpose: "Acts as the Precision Scalpel. Prevents 10% lexical errors that shatter fair-play honkaku logic.",
+      application: "Consult when selecting precise terminology for forensic clues or analytical detective deductions.",
+      status: false
+    },
+    {
+      id: 8,
+      stage: 1,
+      order: 8,
+      title: "English Collocations in Use (Advanced)",
+      author: "Felicity O'Dell & Michael McCarthy",
+      category: "Grammar & Syntax",
+      teaches: "Natural, high-velocity word pairings (e.g., 'driving rain', 'mitigating circumstances', 'airtight alibi').",
+      purpose: "Serves as the Collocation Bridge. Converts passive read-only vocabulary into active, write-mode narrative weapons.",
+      application: "Drill collocations to eliminate awkward L2 phrasing and ensure native-level prose flow.",
+      status: false
+    },
+    {
+      id: 9,
+      stage: 1,
+      order: 9,
+      title: "English Phrasal Verbs in Use (Advanced)",
+      author: "Michael McCarthy & Felicity O'Dell",
+      category: "Grammar & Syntax",
+      teaches: "Street-level verbal combinations (e.g., 'stake out', 'cover up', 'break down') for dialogue and action.",
+      purpose: "Injects procedural momentum into realistic dialogue and keeps action scenes grounded.",
+      application: "Apply during police interrogations and rapid procedural sequences to keep dialogue punchy.",
+      status: false
+    },
+    {
+      id: 10,
+      stage: 1,
+      order: 10,
+      title: "The Phrasal Complexity Framework",
+      author: "Douglas Biber & Bethany Gray",
+      category: "Grammar & Syntax",
+      teaches: "Nominal pre-modification, attributive adjectives, and complex noun phrases over clausal chaining.",
+      purpose: "Replaces L2 spoken clausal complexity with dense, authoritative native academic/literary weight.",
+      application: "Compress multi-clause descriptions into single, high-density noun phrases to heighten tension.",
+      status: false
+    },
+    {
+      id: 11,
+      stage: 1,
+      order: 11,
+      title: "Style: Lessons in Clarity and Grace",
+      author: "Joseph M. Williams",
+      category: "Grammar & Syntax",
+      teaches: "Sentence thermodynamics: Topic (Old/Given info) at the start vs. Stress (New/Heavy info) at the end.",
+      purpose: "Manages reader cognitive bandwidth and ensures forensic clues hit with maximum impact in the Stress position.",
+      application: "Engineer sentences so given context starts the thought and vital clues land in the final stress position.",
+      status: false
+    },
+    {
+      id: 12,
+      stage: 1,
+      order: 12,
+      title: "Clear and Simple as the Truth: Writing Classic Prose",
+      author: "Francis-Noël Thomas & Mark Turner",
+      category: "Subtext & Aesthetics",
+      teaches: "Classic Style Stance: Presenting truth as knowable, objective, un-hedged, and transparent without authorial ego.",
+      purpose: "The ultimate 'Pane of Glass' camouflage. Presents key clues with objective confidence so reader guards drop.",
+      application: "Write murder scene physical details in cool, un-hedged classic prose to mask their mechanical significance.",
+      status: false
+    },
+
+    // STAGE 2: PUZZLE PLOT & TEMPORAL PHYSICS (9 BOOKS)
+    {
+      id: 13,
+      stage: 2,
+      order: 13,
+      title: "Codes of Fair Play (20 Rules & Knox Decalogue)",
+      author: "S.S. Van Dine & Ronald Knox",
+      category: "Puzzle Plot & Fair-Play",
+      teaches: "Rigid legal codes of mystery writing: mandatory clue disclosure, forbidding hidden supernatural tricks or unforeshadowed poisons.",
+      purpose: "Establishes the unbreakable contract of absolute trust between author and analytical reader.",
+      application: "Audit plot outlines against these codes to ensure all clues are fully accessible before the climax.",
+      status: false
+    },
+    {
+      id: 14,
+      stage: 2,
+      order: 14,
+      title: "The Locked-Room Lecture (The Three Coffins, Ch. 17)",
+      author: "John Dickson Carr",
+      category: "Puzzle Plot & Fair-Play",
+      teaches: "Exhaustive taxonomy of impossible crime mechanics: tamper seals, hidden passages, delayed killing devices, alibi tricks.",
+      purpose: "Functions as the master engineering catalog for locked-room puzzles and physical illusions.",
+      application: "Reference when designing the central impossible murder mechanism in Layer 1 (Ghost Timeline).",
+      status: false
+    },
+    {
+      id: 15,
+      stage: 2,
+      order: 15,
+      title: "The Decagon House Murders",
+      author: "Yukito Ayatsuji",
+      category: "Puzzle Plot & Fair-Play",
+      teaches: "Shin-honkaku (Neo-Orthodox) puzzle plot philosophy, meta-mystery analysis, and fair-play clue layering.",
+      purpose: "Blueprint for modern Japanese puzzle-first narrative design where mechanics outrank melodrama.",
+      application: "Study the opening debate chapters to understand how to embed fair-play rules into character discussions.",
+      status: false
+    },
+    {
+      id: 16,
+      stage: 2,
+      order: 16,
+      title: "Locked Room Murders",
+      author: "Robert Adey",
+      category: "Puzzle Plot & Fair-Play",
+      teaches: "Catalog of over 2,000 locked-room crimes with categorized solutions and mechanical breakdown.",
+      purpose: "Comprehensive reference library for alibis, hidden compartments, and physical trick designs.",
+      application: "Use to verify originality and cross-check puzzle mechanics against existing historical tropes.",
+      status: false
+    },
+    {
+      id: 17,
+      stage: 2,
+      order: 17,
+      title: "The Typology of Detective Fiction",
+      author: "Tzvetan Todorov",
+      category: "Temporal Physics & Focalization",
+      teaches: "Structuralist dual-timeline split: Story of the Crime (Ghost Timeline) vs. Story of the Investigation (Police Timeline).",
+      purpose: "Provides theoretical validation for overlapping hidden reality with manufactured alibi illusions.",
+      application: "Map Layer 1 (Ghost Reality) first, then write the draft entirely from Layer 2 (Police Illusion).",
+      status: false
+    },
+    {
+      id: 18,
+      stage: 2,
+      order: 18,
+      title: "Introduction to The Omnibus of Crime",
+      author: "Dorothy L. Sayers",
+      category: "Puzzle Plot & Fair-Play",
+      teaches: "Mechanics of clue architecture, fair-play misdirection, and hiding evidence in plain sight.",
+      purpose: "Guides how to plant vital physical clues without alerting reader suspicion.",
+      application: "Wrap crucial forensic details inside routine environmental descriptions or emotional moments.",
+      status: false
+    },
+    {
+      id: 19,
+      stage: 2,
+      order: 19,
+      title: "Narrative Discourse: An Essay in Method",
+      author: "Gérard Genette",
+      category: "Temporal Physics & Focalization",
+      teaches: "Narrative Time Physics: Order (Analepsis/Prolepsis), Duration (Pause/Scene/Summary/Ellipsis), Frequency (Singulative/Iterative/Repetitive).",
+      purpose: "Provides microscopic mathematical formulas for weaving dual timelines and building alibi anchor points.",
+      application: "Deploy Ellipsis to skip killer tricks; use Repetitive Frequency to expose alibi discrepancies.",
+      status: false
+    },
+    {
+      id: 20,
+      stage: 2,
+      order: 20,
+      title: "Narratology & Narrative Fiction (Focalization)",
+      author: "Mieke Bal & Shlomith Rimmon-Kenan",
+      category: "Temporal Physics & Focalization",
+      teaches: "Separating Voice (Narrator) from Eye (Focalizer); Zero, External, and Internal Focalization modes.",
+      purpose: "Restricts narrative data flow; hides clues behind character biases (Internal) or raw uninterpreted facts (External).",
+      application: "Filter crime scene observations through a biased detective to camouflage vital clues.",
+      status: false
+    },
+    {
+      id: 21,
+      stage: 2,
+      order: 21,
+      title: "Sanderson's Three Laws of Magic",
+      author: "Brandon Sanderson",
+      category: "Supernatural Physics",
+      teaches: "Hard magic system design: 1st Law (Understanding), 2nd Law (Limitations > Power), 3rd Law (Expansion over bloat).",
+      purpose: "Applies strict honkaku fair-play constraints to supernatural threats and low-scale fantasy.",
+      application: "Treat demonic threats or magic powers as hard physical systems with strict, unbreakable limitations.",
+      status: false
+    },
+
+    // STAGE 3: SYNTACTIC WEAPONRY & BEHAVIORAL MATRIX (5 BOOKS)
+    {
+      id: 22,
+      stage: 3,
+      order: 22,
+      title: "What Every BODY is Saying",
+      author: "Joe Navarro",
+      category: "Behavioral Profiling",
+      teaches: "FBI non-verbal profiling: pacifying tics, torso shifts, suprasternal notch touching, foot orientation.",
+      purpose: "Builds a dictionary of anatomical physical tells to catalog suspect anxiety with scientific accuracy.",
+      application: "Replace cliché emotional descriptions with precise FBI-validated anatomical body language.",
+      status: false
+    },
+    {
+      id: 23,
+      stage: 3,
+      order: 23,
+      title: "Facial Action Coding System (FACS Framework)",
+      author: "Paul Ekman & Wallace V. Friesen",
+      category: "Behavioral Profiling",
+      teaches: "Anatomical Action Units (AUs) of micro-expressions (1/25th second facial muscle leaks).",
+      purpose: "Scientific blueprint for writing Micro-Betrayals that contradict stated alibis or fake expressions.",
+      application: "Describe specific Action Unit contractions (e.g., AU 6 + AU 12 vs. AU 12 alone) to expose lying suspects.",
+      status: false
+    },
+    {
+      id: 24,
+      stage: 3,
+      order: 24,
+      title: "Directing Actors",
+      author: "Judith Weston",
+      category: "Behavioral Profiling",
+      teaches: "Actor Objectives and Action Verbs (e.g., 'to corner', 'to shrink') to replace passive emotional adjectives.",
+      purpose: "Eradicates vague character descriptions ('he looked angry') with concrete psychological tactics.",
+      application: "Assign concrete Action Verbs to characters in dialogue scenes to sharpen subtextual conflict.",
+      status: false
+    },
+    {
+      id: 25,
+      stage: 3,
+      order: 25,
+      title: "Building Great Sentences",
+      author: "Brooks Landon",
+      category: "Pacing & Throttle",
+      teaches: "Mechanics of cumulative sentences: direct base clause followed by cascading subordinate modifiers.",
+      purpose: "Expands time to pack dense forensic layout details and character psychological friction into single units.",
+      application: "Deploy cumulative sentences to pause external time while deepening locked-room descriptions.",
+      status: false
+    },
+    {
+      id: 26,
+      stage: 3,
+      order: 26,
+      title: "Artful Sentences: Syntax as Style",
+      author: "Virginia Tufte",
+      category: "Pacing & Throttle",
+      teaches: "Syntactic symbolism: manipulating word ordering to physically mirror character panic and psychological states.",
+      purpose: "Makes sentence structures bear the emotional load of the scene without relies on melodramatic adverbs.",
+      application: "Align sentence syntax with character internal turmoil during intense procedural beats.",
+      status: false
+    },
+
+    // STAGE 4: ELITE LITERARY & PSYCHOLOGICAL BRIDGE (5 BOOKS)
+    {
+      id: 27,
+      stage: 4,
+      order: 27,
+      title: "The Art of Subtext: Beyond Plot",
+      author: "Charles Baxter",
+      category: "Subtext & Aesthetics",
+      teaches: "Subtextual mechanics: using mundane conversations (ordering food, weather) to negotiate power and hide trauma.",
+      purpose: "Weaponizes dialogue so surface words mean one thing while psychological reality is the opposite.",
+      application: "Draft interrogations where characters dispute mundane topics to carry high-stakes psychological threats.",
+      status: false
+    },
+    {
+      id: 28,
+      stage: 4,
+      order: 28,
+      title: "Reading Like a Writer",
+      author: "Francine Prose",
+      category: "Subtext & Aesthetics",
+      teaches: "Word-by-word micro-dissection of literary masters, analyzing adjective choice and comma placement.",
+      purpose: "Elevates prose resonance, transforming transparent pane-of-glass prose into rich literary texture.",
+      application: "Study master paragraphs to select words for aesthetic resonance and rhythmic weight.",
+      status: false
+    },
+    {
+      id: 29,
+      stage: 4,
+      order: 29,
+      title: "How Fiction Works",
+      author: "James Wood",
+      category: "Literary Architecture",
+      teaches: "Free Indirect Style and controlling psychic distance (zooming camera in/out of character consciousness).",
+      purpose: "Projects character neuroses and internal fractures directly onto crime scene descriptions.",
+      application: "Blend authorial narrator voice with detective internal perspective during investigation scenes.",
+      status: false
+    },
+    {
+      id: 30,
+      stage: 4,
+      order: 30,
+      title: "The Art of Fiction",
+      author: "John Gardner",
+      category: "Literary Architecture",
+      teaches: "Rules of the 'vivid and continuous waking dream', avoiding melodrama, sentimentality, and purple prose.",
+      purpose: "Prevents literary introspections from breaking reader immersion in procedural stakes.",
+      application: "Enforce strict aesthetic discipline to ensure poetic descriptions never stall narrative momentum.",
+      status: false
+    },
+    {
+      id: 31,
+      stage: 4,
+      order: 31,
+      title: "The Rhetoric of Fiction",
+      author: "Wayne C. Booth",
+      category: "Literary Architecture",
+      teaches: "Implied author stance, unreliable narrator mechanics, and controlling distance between reader and narrator.",
+      purpose: "Builds the 'Appeal Engine' that keeps readers hooked when physical plot momentum pauses.",
+      application: "Construct unreliable narrators whose internal lies create an engaging psychological puzzle.",
+      status: false
+    }
+  ];
+
+  // STAGE METADATA
+  const stageMeta = {
+    1: {
+      badge: "Stage 1",
+      title: "Base Mechanics & Phrasal Engineering",
+      color: "bg-indigo-600",
+      desc: "Objective: Bridge L2 spoken intuition into transparent, native-level written prose. Establishes rigid grammatical rules, eliminates conversational clausal complexity in favor of phrasal nominalization, and builds a precise pacing throttle."
+    },
+    2: {
+      badge: "Stage 2",
+      title: "Puzzle Plot & Temporal Physics",
+      color: "bg-amber-600",
+      desc: "Objective: Master the temporal mathematics and focalization optics of the puzzle plot. Chart Layer 1 (Ghost Reality), build Layer 2 (Police Illusion), and enforce strict hard-magic constraints on supernatural elements."
+    },
+    3: {
+      badge: "Stage 3",
+      title: "Syntactic Weaponry & Behavioral Matrix",
+      color: "bg-emerald-600",
+      desc: "Objective: Upgrade behavioral profiling to an anatomical standard. Replace cliché physical tells with FBI non-verbal profilers and FACS Action Units to expose Micro-Betrayals during interrogations."
+    },
+    4: {
+      badge: "Stage 4",
+      title: "Elite Literary & Psychological Bridge",
+      color: "bg-purple-600",
+      desc: "Objective: Fuse airtight procedural plotting with elite literary aesthetics. Deploy Free Indirect Style, subtextual dialogue, and Wayne C. Booth's psychological Appeal Engine to achieve Dostoevskian weight."
+    },
+    all: {
+      badge: "Master Matrix",
+      title: "Full 31-Text Hermetically Sealed Syllabus",
+      color: "bg-slate-800",
+      desc: "Complete sequential roadmap spanning foundational grammar, punctuation throttles, honkaku locked-room mechanics, narratology temporal physics, FBI/FACS profiling, and elite literary architecture."
+    }
+  };
+
+  let currentTab = 'stage1';
+  let userProgress = JSON.parse(localStorage.getItem('matrix_progress') || '{}');
+
+  // INITIALIZE APP
+  document.addEventListener("DOMContentLoaded", () => {
+    // Load saved progress into masterBooks
+    masterBooks.forEach(b => {
+      if (userProgress[b.id]) {
+        b.status = true;
+      }
+    });
+
+    updateProgressUI();
+    renderTab('stage1');
+    initCharts();
+  });
+
+  // SWITCH TAB
+  function switchTab(tabKey) {
+    currentTab = tabKey;
+    
+    // Update Tab UI Buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.remove('active', 'border-indigo-600', 'text-indigo-600');
+      btn.classList.add('border-transparent', 'text-slate-600');
+    });
+
+    const activeBtn = document.getElementById(`tab-${tabKey}`);
+    if (activeBtn) {
+      activeBtn.classList.add('active', 'border-indigo-600', 'text-indigo-600');
+      activeBtn.classList.remove('border-transparent', 'text-slate-600');
+    }
+
+    if (tabKey === 'analytics') {
+      document.getElementById('stage-banner').classList.add('hidden');
+      document.getElementById('books-grid').classList.add('hidden');
+      document.getElementById('analytics-view').classList.remove('hidden');
+    } else {
+      document.getElementById('stage-banner').classList.remove('hidden');
+      document.getElementById('books-grid').classList.remove('hidden');
+      document.getElementById('analytics-view').classList.add('hidden');
+      renderTab(tabKey);
+    }
+  }
+
+  // RENDER TAB CONTENT
+  function renderTab(tabKey) {
+    const meta = stageMeta[tabKey] || stageMeta['all'];
+    
+    // Update Stage Banner
+    document.getElementById('stage-badge').className = `px-2.5 py-1 rounded-md text-xs font-bold text-white uppercase tracking-wider ${meta.color}`;
+    document.getElementById('stage-badge').innerText = meta.badge;
+    document.getElementById('stage-title').innerText = meta.title;
+    document.getElementById('stage-description').innerText = meta.desc;
+
+    filterBooks();
+  }
+
+  // FILTER & RENDER BOOKS GRID
+  function filterBooks() {
+    if (currentTab === 'analytics') return;
+
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const catFilter = document.getElementById('category-filter').value;
+    const statusFilter = document.getElementById('status-filter').value;
+
+    const filtered = masterBooks.filter(b => {
+      // Stage Tab Filter
+      if (currentTab !== 'all' && `stage${b.stage}` !== currentTab) return false;
+
+      // Category Filter
+      if (catFilter !== 'all' && b.category !== catFilter) return false;
+
+      // Status Filter
+      if (statusFilter === 'completed' && !b.status) return false;
+      if (statusFilter === 'pending' && b.status) return false;
+
+      // Search Term
+      if (searchTerm) {
+        const matchTitle = b.title.toLowerCase().includes(searchTerm);
+        const matchAuthor = b.author.toLowerCase().includes(searchTerm);
+        const matchTeaches = b.teaches.toLowerCase().includes(searchTerm);
+        const matchPurpose = b.purpose.toLowerCase().includes(searchTerm);
+        const matchCategory = b.category.toLowerCase().includes(searchTerm);
+        return matchTitle || matchAuthor || matchTeaches || matchPurpose || matchCategory;
+      }
+
+      return true;
+    });
+
+    const grid = document.getElementById('books-grid');
+    grid.innerHTML = '';
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div class="col-span-full bg-white p-8 rounded-xl border border-slate-200 text-center text-slate-500">
+          <p class="text-base font-semibold">No matching books found in this view.</p>
+          <p class="text-xs mt-1">Try clearing your search terms or filters.</p>
+        </div>
+      `;
+      return;
+    }
+
+    filtered.forEach(b => {
+      const card = document.createElement('div');
+      card.className = `bg-white rounded-xl border ${b.status ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-200'} shadow-sm hover:shadow-md transition-shadow p-5 flex flex-col justify-between relative`;
+
+      let stageColorClass = "bg-indigo-100 text-indigo-800";
+      if (b.stage === 2) stageColorClass = "bg-amber-100 text-amber-800";
+      if (b.stage === 3) stageColorClass = "bg-emerald-100 text-emerald-800";
+      if (b.stage === 4) stageColorClass = "bg-purple-100 text-purple-800";
+
+      card.innerHTML = `
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${stageColorClass}">Stage ${b.stage} • Step #${b.order}</span>
+            <button onclick="toggleMastery(${b.id})" class="text-xs px-2 py-1 rounded font-semibold transition-colors ${b.status ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+              ${b.status ? '✓ Mastered' : 'Mark Done'}
+            </button>
+          </div>
+
+          <h3 class="text-base font-extrabold text-slate-900 leading-snug hover:text-indigo-600 transition-colors cursor-pointer" onclick="openModal(${b.id})">
+            ${b.title}
+          </h3>
+          <p class="text-xs font-medium text-indigo-600 mb-3">${b.author}</p>
+
+          <div class="space-y-2 text-xs text-slate-600 mb-4">
+            <div>
+              <strong class="text-slate-800 font-semibold">Teaches:</strong> ${b.teaches}
+            </div>
+            <div>
+              <strong class="text-slate-800 font-semibold">Purpose:</strong> ${b.purpose}
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span class="text-[11px] font-medium bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full">${b.category}</span>
+          <button onclick="openModal(${b.id})" class="font-bold text-indigo-600 hover:text-indigo-800 underline">
+            Details & Blueprint →
+          </button>
+        </div>
+      `;
+
+      grid.appendChild(card);
+    });
+  }
+
+  // TOGGLE MASTERY STATUS
+  function toggleMastery(bookId) {
+    const book = masterBooks.find(b => b.id === bookId);
+    if (!book) return;
+
+    book.status = !book.status;
+    userProgress[book.id] = book.status;
+    localStorage.setItem('matrix_progress', JSON.stringify(userProgress));
+
+    updateProgressUI();
+    filterBooks();
+
+    // If modal is open for this book, update modal button
+    const modalBtn = document.getElementById('modal-toggle-btn');
+    if (modalBtn && modalBtn.dataset.bookId == bookId) {
+      updateModalToggleBtn(book);
+    }
+  }
+
+  // UPDATE PROGRESS UI
+  function updateProgressUI() {
+    const completed = masterBooks.filter(b => b.status).length;
+    const total = masterBooks.length;
+    const pct = Math.round((completed / total) * 100);
+
+    document.getElementById('progress-percent').innerText = `${pct}% Completed`;
+    document.getElementById('progress-bar-fill').style.width = `${pct}%`;
+    document.getElementById('progress-count').innerText = `${completed} of ${total} Texts Mastered`;
+  }
+
+  // RESET PROGRESS
+  function resetProgress() {
+    if (confirm("Reset all mastery progress?")) {
+      userProgress = {};
+      localStorage.removeItem('matrix_progress');
+      masterBooks.forEach(b => b.status = false);
+      updateProgressUI();
+      filterBooks();
+    }
+  }
+
+  // CLEAR FILTERS
+  function clearFilters() {
+    document.getElementById('search-input').value = '';
+    document.getElementById('category-filter').value = 'all';
+    document.getElementById('status-filter').value = 'all';
+    filterBooks();
+  }
+
+  // OPEN MODAL
+  function openModal(bookId) {
+    const book = masterBooks.find(b => b.id === bookId);
+    if (!book) return;
+
+    document.getElementById('modal-title').innerText = book.title;
+    document.getElementById('modal-author').innerText = book.author;
+    document.getElementById('modal-order').innerText = `Step #${book.order} of 31`;
+    document.getElementById('modal-teaches').innerText = book.teaches;
+    document.getElementById('modal-purpose').innerText = book.purpose;
+    document.getElementById('modal-application').innerText = book.application;
+    document.getElementById('modal-category').innerText = book.category;
+
+    const badge = document.getElementById('modal-stage-badge');
+    badge.innerText = `Stage ${book.stage}`;
+    badge.className = `px-2.5 py-0.5 rounded text-xs font-bold uppercase tracking-wide text-white ${
+      book.stage === 1 ? 'bg-indigo-600' :
+      book.stage === 2 ? 'bg-amber-600' :
+      book.stage === 3 ? 'bg-emerald-600' : 'bg-purple-600'
+    }`;
+
+    const toggleBtn = document.getElementById('modal-toggle-btn');
+    toggleBtn.dataset.bookId = book.id;
+    toggleBtn.onclick = () => toggleMastery(book.id);
+    updateModalToggleBtn(book);
+
+    document.getElementById('book-modal').classList.remove('hidden');
+  }
+
+  function updateModalToggleBtn(book) {
+    const toggleBtn = document.getElementById('modal-toggle-btn');
+    if (book.status) {
+      toggleBtn.innerText = "✓ Mastered (Click to Undo)";
+      toggleBtn.className = "px-4 py-2 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors";
+    } else {
+      toggleBtn.innerText = "Mark as Mastered";
+      toggleBtn.className = "px-4 py-2 rounded-lg text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors";
+    }
+  }
+
+  // CLOSE MODAL
+  function closeModal() {
+    document.getElementById('book-modal').classList.add('hidden');
+  }
+
+  // INITIALIZE CHART.JS VISUALIZATIONS
+  function initCharts() {
+    // Chart 1: Pillar Distribution Bar Chart
+    const ctx1 = document.getElementById('pillarChart').getContext('2d');
+    new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: ['Stage 1: Syntax', 'Stage 2: Puzzle/Time', 'Stage 3: Behavioral', 'Stage 4: Literary'],
+        datasets: [{
+          label: 'Number of Core Texts',
+          data: [12, 9, 5, 5],
+          backgroundColor: ['#4f46e5', '#d97706', '#059669', '#7c3aed'],
+          borderRadius: 6
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: 'Text Count per Narrative Engineering Stage',
+            font: { size: 12, weight: 'bold' }
+          }
+        },
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 2 } }
+        }
+      }
+    });
+
+    // Chart 2: System Synergy Donut Chart
+    const ctx2 = document.getElementById('synergyChart').getContext('2d');
+    new Chart(ctx2, {
+      type: 'doughnut',
+      data: {
+        labels: ['Grammar & Pacing', 'Fair-Play & Time Physics', 'Profiling & FACS', 'Literary Subtext'],
+        datasets: [{
+          data: [39, 29, 16, 16],
+          backgroundColor: ['#4f46e5', '#d97706', '#059669', '#7c3aed']
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+          title: {
+            display: true,
+            text: 'Systemic Focus Weight (%)',
+            font: { size: 12, weight: 'bold' }
+          }
+        }
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
